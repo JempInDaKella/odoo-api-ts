@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES2015",
+      "outDir": "dist",
+      "module": "ES2015",
+      "watch": true,
+      "moduleResolution": "Node",
+      "strict": false,
+      "allowJs": false,
+      "resolveJsonModule": true
+    },
+    "files": ["./src/index.ts"],
+    "exclude": ["node_modules", "./test/*"]
+  }  
