@@ -1,7 +1,7 @@
 /**
  * Odoo JSONRPC API
  */
- import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+ import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 
  type LoginParams = { db: string, login: string, password: string }
  
@@ -75,7 +75,7 @@
  
  type numbers = number[]
  
- const responseBody = (response: AxiosResponse) => response.data
+//  const responseBody = (response: AxiosResponse) => response.data
  // Shortcuts methods
  // const requests = {
  //   get: (url: string) => axios.get(url).then(responseBody),
@@ -366,7 +366,7 @@ interface Users extends TModel {
      static ODOO_CALL_ENDPOINT: string = "/web/dataset/call"
      static ODOO_SEARCH_READ_ENDPOINT: string = "/web/dataset/search_read"
    
-     public uid: number
+     public uid?: number
      public sid?: number
      public cookie?: object
      public partnerId?: number
@@ -398,12 +398,12 @@ interface Users extends TModel {
      // }
  
      logout(): void {      
-         this.uid = null
-         this.partnerId = null
-         this.cookie = null
-         this.context = null
-         this.username = null
-         this.password = null
+         this.uid = 0
+        //  this.partnerId = null
+         this.cookie = undefined
+         this.context = undefined
+         this.username = ''
+         this.password = ''
        }
  
        login(username: string, password: string): Promise<OdooLoginResponse> {
@@ -423,7 +423,7 @@ interface Users extends TModel {
            }
 
            axios(options)
-             .then((response /*: Promise<OdooLoginResponse>*/) => {
+             .then( async (response : AxiosResponse<any, any>) => {
                if (!response.data.result) {
                  reject("Username or password not valid")
                } else {
@@ -436,7 +436,7 @@ interface Users extends TModel {
                  resolve(response.data.result)
                }
              })
-             .catch(error => reject(error))
+             .catch((error: any) => reject(error))
          })
        } // login()
  
@@ -471,7 +471,7 @@ interface Users extends TModel {
      
          return new Promise<T>((resolve, reject) => {
            return axios(options)
-             .then(response => {
+             .then((response: { data: { error: any; result: T | PromiseLike<T> } }) => {
                if (response.data.error) reject(response.data.error)
                resolve(response.data.result)
              })
@@ -526,13 +526,11 @@ interface Users extends TModel {
                  service: "object",
                  method: "execute_kw",
                  args: [this.model, "read", [ids], { fields }]
-             })
-         if (ids instanceof Number) {
-             return result[0]
-         } else {
-             // ids is an Array
-             return result as T[]
-         }
+             }) as Array<T>
+        //  if (typeof ids === 'number') {
+             // can't narrow type here!
+             return result as Array<T>
+        //  }
      }
    
      /**
@@ -659,4 +657,4 @@ interface Users extends TModel {
      
    }
  
- export { Odoo, Partner, Users }
+ export { Odoo, type Partner, type Users }

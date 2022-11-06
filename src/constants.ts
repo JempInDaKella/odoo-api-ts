@@ -6,9 +6,9 @@ if (result.error) {
   throw result.error
 }
 
-const username: string =process.env['ODOO_USERNAME']
-const password: string =process.env['ODOO_PASSWORD']
-const db: string =process.env['ODOO_DB']
-const url: string =process.env['ODOO_URL']
+const username=process.env['ODOO_USERNAME'] as string
+const password=process.env['ODOO_PASSWORD'] as string
+const db=process.env['ODOO_DB'] as string
+const url=process.env['ODOO_URL'] as string
 
 export { username, password, db, url }
