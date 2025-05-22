@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Odoo } from './odoo-api';
+import Dashboard from './components/Dashboard';
 
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [odooInstance, setOdooInstance] = useState<Odoo | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,13 +18,24 @@ function App() {
       const odoo = new Odoo(import.meta.env.VITE_ODOO_URL, import.meta.env.VITE_ODOO_DB);
       const result = await odoo.login(username, password);
       console.log('Logged in successfully:', result);
-      // Handle successful login here
+      setOdooInstance(odoo);
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
+  const handleLogout = () => {
+    if (odooInstance) {
+      odooInstance.logout();
+      setOdooInstance(null);
+    }
+  };
+
+  if (odooInstance) {
+    return <Dashboard odoo={odooInstance} onLogout={handleLogout} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
