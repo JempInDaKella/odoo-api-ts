@@ -15,11 +15,15 @@ function App() {
     setLoading(true);
 
     try {
-      const odoo = new Odoo(import.meta.env.VITE_ODOO_URL, import.meta.env.VITE_ODOO_DB);
+      const odoo = new Odoo(
+        import.meta.env.VITE_ODOO_URL as string, 
+        import.meta.env.VITE_ODOO_DB as string
+      );
       const result = await odoo.login(username, password);
       console.log('Logged in successfully:', result);
       setOdooInstance(odoo);
     } catch (err) {
+      console.error('Login error:', err);
       setError('Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
