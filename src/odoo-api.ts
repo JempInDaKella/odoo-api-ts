@@ -573,3 +573,5 @@ class OdooResource {
 }
 
 export { Odoo, type Partner, type Users }
+
+export { Odoo }
